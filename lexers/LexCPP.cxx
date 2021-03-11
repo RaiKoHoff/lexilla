@@ -268,8 +268,7 @@ class LinePPState {
 		}
 	}
 public:
-	LinePPState() noexcept {
-	}
+	LinePPState() noexcept = default;
 	bool IsActive() const noexcept {
 		return state == 0;
 	}
@@ -529,7 +528,7 @@ class LexerCPP : public ILexer5 {
 			return !arguments.empty();
 		}
 	};
-	typedef std::map<std::string, SymbolValue> SymbolTable;
+	using SymbolTable = std::map<std::string, SymbolValue>;
 	SymbolTable preprocessorDefinitionsStart;
 	OptionsCPP options;
 	OptionSetCPP osCPP;
@@ -554,8 +553,7 @@ public:
 	LexerCPP(LexerCPP &&) = delete;
 	void operator=(const LexerCPP &) = delete;
 	void operator=(LexerCPP &&) = delete;
-	virtual ~LexerCPP() {
-	}
+	virtual ~LexerCPP() = default;
 	void SCI_METHOD Release() noexcept override {
 		delete this;
 	}
@@ -884,7 +882,7 @@ void SCI_METHOD LexerCPP::Lex(Sci_PositionU startPos, Sci_Position length, int i
 			lineCurrent++;
 			lineEndNext = styler.LineEnd(lineCurrent);
 			vlls.Add(lineCurrent, preproc);
-			if (rawStringTerminator != "") {
+			if (!rawStringTerminator.empty()) {
 				rawSTNew.Set(lineCurrent-1, rawStringTerminator);
 			}
 		}
@@ -895,7 +893,7 @@ void SCI_METHOD LexerCPP::Lex(Sci_PositionU startPos, Sci_Position length, int i
 				lineCurrent++;
 				lineEndNext = styler.LineEnd(lineCurrent);
 				vlls.Add(lineCurrent, preproc);
-				if (rawStringTerminator != "") {
+				if (!rawStringTerminator.empty()) {
 					rawSTNew.Set(lineCurrent-1, rawStringTerminator);
 				}
 				sc.Forward();
@@ -1380,7 +1378,7 @@ void SCI_METHOD LexerCPP::Lex(Sci_PositionU startPos, Sci_Position length, int i
 									if (startValue < restOfLine.length())
 										value = restOfLine.substr(startValue);
 									preprocessorDefinitions[key] = SymbolValue(value, args);
-									ppDefineHistory.push_back(PPDefinition(lineCurrent, key, value, false, args));
+									ppDefineHistory.emplace_back(lineCurrent, key, value, false, args);
 									definitionsChanged = true;
 								} else {
 									// Value
@@ -1391,7 +1389,7 @@ void SCI_METHOD LexerCPP::Lex(Sci_PositionU startPos, Sci_Position length, int i
 									if (OnlySpaceOrTab(value))
 										value = "1";	// No value defaults to 1
 									preprocessorDefinitions[key] = value;
-									ppDefineHistory.push_back(PPDefinition(lineCurrent, key, value));
+									ppDefineHistory.emplace_back(lineCurrent, key, value);
 									definitionsChanged = true;
 								}
 							}
@@ -1399,10 +1397,10 @@ void SCI_METHOD LexerCPP::Lex(Sci_PositionU startPos, Sci_Position length, int i
 							if (options.updatePreprocessor && preproc.IsActive()) {
 								const std::string restOfLine = GetRestOfLine(styler, sc.currentPos + 5, false);
 								std::vector<std::string> tokens = Tokenize(restOfLine);
-								if (tokens.size() >= 1) {
+								if (!tokens.empty()) {
 									const std::string key = tokens[0];
 									preprocessorDefinitions.erase(key);
-									ppDefineHistory.push_back(PPDefinition(lineCurrent, key, "", true));
+									ppDefineHistory.emplace_back(lineCurrent, key, "", true);
 									definitionsChanged = true;
 								}
 							}
@@ -1777,7 +1775,7 @@ bool LexerCPP::EvaluateExpression(const std::string &expr, const SymbolTable &pr
 
 	// "0" or "" -> false else true
 	const bool isFalse = tokens.empty() ||
-		((tokens.size() == 1) && ((tokens[0] == "") || tokens[0] == "0"));
+		((tokens.size() == 1) && (((tokens[0]).empty()) || tokens[0] == "0"));
 	return !isFalse;
 }
 

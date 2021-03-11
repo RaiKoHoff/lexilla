@@ -41,14 +41,16 @@ static inline bool AtEOL(Accessor &styler, Sci_PositionU i) {
 // Tests for BATCH Operators
 static bool IsBOperator(char ch) {
 	return (ch == '=') || (ch == '+') || (ch == '>') || (ch == '<') ||
-		(ch == '|') || (ch == '?') || (ch == '*')||
-		(ch == '&') || (ch == '(') || (ch == ')');
+		(ch == '|') || (ch == '?') || (ch == '*') ||
+		(ch == '&') || (ch == '(') || (ch == ')') ||
+		(ch == '[') || (ch == ']');
 }
 
 // Tests for BATCH Separators
 static bool IsBSeparator(char ch) {
 	return (ch == '\\') || (ch == '.') || (ch == ';') ||
-		(ch == '\"') || (ch == '\'') || (ch == '/');
+		(ch == '\"') || (ch == '\'') || (ch == '/') ||
+		(ch == '&') || (ch == '|');
 }
 
 // Tests for escape character
@@ -72,7 +74,7 @@ static bool textQuoted(char *lineBuffer, Sci_PositionU endPos) {
 	char *pQuote;
 	pQuote = strchr(strBuffer, '"');
 	bool CurrentStatus = false;
-	while (pQuote != NULL)
+	while (pQuote != nullptr)
 	{
 		if (!IsEscaped(strBuffer, pQuote - strBuffer)) {
 			CurrentStatus = !CurrentStatus;
@@ -200,6 +202,29 @@ static void ColouriseBatchDoc(
 				if ((CompareCaseInsensitive(wordBuffer, "rem") == 0) && continueProcessing) {
 					styler.ColourTo(endPos, SCE_BAT_COMMENT);
 					break;
+				}
+				else if ((wbl > 2) && (wordBuffer[0] == '&') && (wordBuffer[1] == ':') && (wordBuffer[2] == ':') && (continueProcessing)) {
+					styler.ColourTo(endPos, SCE_BAT_COMMENT);
+					return;
+				}
+				else if (wordBuffer[0] == '&') {
+					// check for comment
+					Sci_PositionU cmntLoc = offset - wbl + 1;
+					// Skip next spaces
+					while ((cmntLoc < lengthLine) &&
+						(isspacechar(lineBuffer[cmntLoc]))) {
+						cmntLoc++;
+					}
+					int p = 0;
+					char buffer[5];
+					while ((cmntLoc < lengthLine) && (p < 4)) {
+						buffer[p++] = lineBuffer[cmntLoc++];
+					}
+					buffer[p] = '\0';
+					if ((((buffer[0] == ':') && (buffer[1] == ':')) || (CompareCaseInsensitive(buffer, "rem ") == 0)) && (continueProcessing)) {
+						styler.ColourTo(endPos, SCE_BAT_COMMENT);
+						return;
+					}
 				}
 				// Check for Separator
 				if (IsBSeparator(wordBuffer[0])) {
@@ -570,7 +595,7 @@ static void ColouriseBatchDoc(
 static const char *const batchWordListDesc[] = {
 	"Internal Commands",
 	"External Commands",
-	0
+	nullptr
 };
 
-LexerModule lmBatch(SCLEX_BATCH, ColouriseBatchDoc, "batch", 0, batchWordListDesc);
+LexerModule lmBatch(SCLEX_BATCH, ColouriseBatchDoc, "batch", nullptr, batchWordListDesc);
