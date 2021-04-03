@@ -1,5 +1,9 @@
-// TestLexers.cxx : Test lexers through Lexilla
-//
+// Lexilla lexer library
+/** @file TestLexers.cxx
+ ** Test lexers through Lexilla.
+ **/
+ // Copyright 2019 by Neil Hodgson <neilh@scintilla.org>
+ // The License.txt file describes the conditions under which this software may be distributed.
 
 #include <cassert>
 
@@ -124,6 +128,7 @@ bool TestFile(std::filesystem::path path,
 		}
 	}
 	if (!plex) {
+		std::cout << "\n" << path.string() << ":1: has no lexer\n\n";
 		return false;
 	}
 
@@ -241,17 +246,19 @@ std::filesystem::path FindLexillaDirectory(std::filesystem::path startDirectory)
 
 
 int main() {
+	bool success = false;
 	// TODO: Allow specifying the base directory through a command line argument
 	const std::filesystem::path baseDirectory = FindLexillaDirectory(std::filesystem::current_path());
 	if (!baseDirectory.empty()) {
 		const std::filesystem::path examplesDirectory = baseDirectory / "test" / "examples";
 #ifdef LEXILLA_STATIC
-		AccessLexilla(examplesDirectory);
+		success = AccessLexilla(examplesDirectory);
 #else
 		const std::filesystem::path sharedLibrary = baseDirectory / "bin" / LEXILLA_LIB;
 		if (Lexilla::Load(sharedLibrary.string())) {
-			AccessLexilla(examplesDirectory);
+			success = AccessLexilla(examplesDirectory);
 		}
 #endif
 	}
+	return success ? 0 : 1;
 }
