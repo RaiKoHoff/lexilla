@@ -56,8 +56,8 @@ struct OptionsJulia {
         foldComment = true;
         foldCompact = false;
         foldDocstring = true;
-        highlightTypeannotation = false;
-        highlightLexerror = false;
+        highlightTypeannotation = true;
+        highlightLexerror = true;
 	}
 };
 
