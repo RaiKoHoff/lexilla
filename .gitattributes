@@ -18,10 +18,12 @@
 **.manifest text
 **.properties text
 **.styled text
+**.folded text
 **.asp text
 **.php text
 **.vb text
 **.d text
+**.jl text
 **.lua text
 **.nim text
 **.pl text
@@ -32,6 +34,7 @@
 **.mms text
 **.tex text
 **.fs text
+**.md text
 **.txt text
 **.pch text
 **.hg* text
