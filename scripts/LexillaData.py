@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # ScintillaData.py - implemented 2013 by Neil Hodgson neilh@scintilla.org
 # Released to the public domain.
+# encoding: cp437
 
 # Common code used by Scintilla and SciTE for source file regeneration.
 # The ScintillaData object exposes information about Scintilla as properties:
