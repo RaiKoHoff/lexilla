@@ -11,6 +11,7 @@
 **.mk text
 **.py text
 **.rc text
+**.css text
 **.html text
 **.bat text
 **.mak text
@@ -24,6 +25,7 @@
 **.vb text
 **.d text
 **.erl text
+**.iss text
 **.jl text
 **.lua text
 **.matlab text
@@ -33,6 +35,7 @@
 **.pl text
 **.p6 text
 **.rb text
+**.rs text
 **.tcl text
 **.err text
 **.mms text
