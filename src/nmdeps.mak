@@ -312,6 +312,18 @@ $(DIR_O)/LexJulia.obj: \
 	../lexlib/LexerModule.h \
 	../lexlib/OptionSet.h \
 	../lexlib/DefaultLexer.h
+$(DIR_O)/LexKix.obj: \
+	../lexers/LexKix.cxx \
+	../../scintilla/include/ILexer.h \
+	../../scintilla/include/Sci_Position.h \
+	../../scintilla/include/Scintilla.h \
+	../include/SciLexer.h \
+	../lexlib/WordList.h \
+	../lexlib/LexAccessor.h \
+	../lexlib/Accessor.h \
+	../lexlib/StyleContext.h \
+	../lexlib/CharacterSet.h \
+	../lexlib/LexerModule.h
 $(DIR_O)/LexLaTeX.obj: \
 	../lexers/LexLaTeX.cxx \
 	../../scintilla/include/ILexer.h \
@@ -567,8 +579,8 @@ $(DIR_O)/LexYAML.obj: \
 	../lexlib/StyleContext.h \
 	../lexlib/CharacterSet.h \
 	../lexlib/LexerModule.h
-$(DIR_O)/LexAHKL.obj: \
-	../lexers_x/LexAHKL.cxx \
+$(DIR_O)/LexAHK.obj: \
+	../lexers_x/LexAHK.cxx \
 	../../scintilla/include/ILexer.h \
 	../../scintilla/include/Sci_Position.h \
 	../../scintilla/include/Scintilla.h \
@@ -649,18 +661,6 @@ $(DIR_O)/LexJSON.obj: \
 	../lexlib/CharacterSet.h \
 	../lexers_x/SciXLexer.h \
 	../include/SciLexer.h
-$(DIR_O)/LexKix.obj: \
-	../lexers_x/LexKix.cxx \
-	../../scintilla/include/ILexer.h \
-	../../scintilla/include/Sci_Position.h \
-	../../scintilla/include/Scintilla.h \
-	../include/SciLexer.h \
-	../lexlib/WordList.h \
-	../lexlib/LexAccessor.h \
-	../lexlib/Accessor.h \
-	../lexlib/StyleContext.h \
-	../lexlib/CharacterSet.h \
-	../lexlib/LexerModule.h
 $(DIR_O)/LexKotlin.obj: \
 	../lexers_x/LexKotlin.cxx \
 	../../scintilla/include/ILexer.h \

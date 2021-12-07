@@ -90,6 +90,7 @@ LEX_OBJS=\
 	$(DIR_O)\LexHTML.obj \
 	$(DIR_O)\LexInno.obj \
 	$(DIR_O)\LexJulia.obj \
+	$(DIR_O)\LexKix.obj \
 	$(DIR_O)\LexLaTeX.obj \
 	$(DIR_O)\LexLua.obj \
 	$(DIR_O)\LexMake.obj \
@@ -110,12 +111,11 @@ LEX_OBJS=\
 	$(DIR_O)\LexVB.obj \
 	$(DIR_O)\LexVHDL.obj \
 	$(DIR_O)\LexYAML.obj \
-	$(DIR_O)\LexAHKL.obj \
+	$(DIR_O)\LexAHK.obj \
 	$(DIR_O)\LexCSV.obj \
 	$(DIR_O)\LexDart.obj \
 	$(DIR_O)\LexerUtils.obj \
 	$(DIR_O)\LexJSON.obj \
-	$(DIR_O)\LexKix.obj \
 	$(DIR_O)\LexKotlin.obj \
 	$(DIR_O)\LexMarkdown.obj \
 	$(DIR_O)\LexPython.obj \
