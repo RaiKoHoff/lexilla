@@ -243,19 +243,19 @@ struct OptionsPython {
 	int decoratorAttributes;
 
 	OptionsPython() noexcept {
-		whingeLevel = 0;
+		whingeLevel = 1;
 		base2or8Literals = true;
 		stringsU = true;
 		stringsB = true;
 		stringsF = true;
 		stringsOverNewline = false;
 		keywords2NoSubIdentifiers = false;
-		fold = false;
-		foldQuotes = false;
-		foldCompact = false;
+		fold = true;
+		foldQuotes = true;
+		foldCompact = true;
 		unicodeIdentifiers = true;
-		identifierAttributes = 0;
-		decoratorAttributes = 0;
+		identifierAttributes = 1;
+		decoratorAttributes = 1;
 	}
 
 	literalsAllowed AllowedLiterals() const noexcept {
