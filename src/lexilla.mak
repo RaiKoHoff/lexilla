@@ -60,7 +60,7 @@ CXXFLAGS=$(CXXFLAGS) $(CXXNDEBUG)
 
 SCINTILLA_INCLUDE = ../../scintilla/include
 
-INCLUDEDIRS=-I../include -I$(SCINTILLA_INCLUDE) -I../src -I../lexlib
+INCLUDEDIRS=-I../include -I$(SCINTILLA_INCLUDE) -I../lexlib
 CXXFLAGS=$(CXXFLAGS) $(INCLUDEDIRS)
 
 all:	$(SCINTILLA_INCLUDE) $(LEXILLA) $(LIBLEXILLA)
@@ -206,6 +206,7 @@ LEXLIB_OBJS=\
 	$(DIR_O)\CharacterCategory.obj \
 	$(DIR_O)\CharacterSet.obj \
 	$(DIR_O)\DefaultLexer.obj \
+	$(DIR_O)\InList.obj \
 	$(DIR_O)\LexAccessor.obj \
 	$(DIR_O)\LexerBase.obj \
 	$(DIR_O)\LexerModule.obj \
