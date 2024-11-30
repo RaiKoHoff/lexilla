@@ -49,6 +49,7 @@
 **.matlab text
 **.ml text
 **.nim text
+**.nix text
 **.octave text
 **.p text
 **.pl text
@@ -59,6 +60,7 @@
 **.roff text
 **.rs text
 **.sql text
+**.st text
 **.tcl text
 **.toml text
 **.tsql text
@@ -69,6 +71,7 @@
 **.vh text
 **.vhd text
 **.x12 text
+**.xml text
 **.yaml text
 **.zig text
 **.md text
