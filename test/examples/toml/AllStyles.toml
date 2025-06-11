@@ -170,7 +170,10 @@ type.name = "pug"
 [ j . "ʞ" . 'l' ]  # same as [j."ʞ".'l']
 
 [product]
-type = { name = "Nail" }
+type = { name = "Nail", features = [
+	"glow",
+	"access",
+] }
 
 [[products]]
 name = "Hammer"
