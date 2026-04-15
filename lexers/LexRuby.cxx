@@ -75,7 +75,7 @@ bool isSafeWordcharOrHigh(char ch) noexcept {
     // Error: scintilla's KeyWords.h includes '.' as a word-char
     // we want to separate things that can take methods from the
     // methods.
-    return isHighBitChar(ch) || isalnum(ch & 0xFF) || ch == '_';
+    return isHighBitChar(ch) || isalnum(ch) || ch == '_';
 }
 
 constexpr bool isWhiteSpace(char ch) noexcept {
@@ -489,7 +489,7 @@ void InterpolateVariable(LexAccessor &styler, int state, Sci_Position &i, char &
     styler.ColourTo(pos, SCE_RB_OPERATOR);
     state = SCE_RB_GLOBAL;
     pos += 2;
-    unsigned len = 0;
+    int len = 0;
     if (chNext == '$') {
         if (chNext2 == '-') {
             ++pos;

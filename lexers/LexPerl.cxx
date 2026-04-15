@@ -87,7 +87,7 @@ namespace {
 #define SUB_HAS_PROTO	1	// only 'prototype' attribute allows prototypes
 #define SUB_HAS_ATTRIB	2	// other attributes can exist leftward
 #define SUB_HAS_MODULE	3	// sub name can have a ::identifier part
-#define SUB_HAS_SUB		4	// 'sub' keyword
+#define SUB_HAS_SUB		4	// 'sub' (or 'method') keyword
 
 // all interpolated styles are different from their parent styles by a constant difference
 // we also assume SCE_PL_STRING_VAR is the interpolated style with the smallest value
@@ -131,8 +131,9 @@ int disambiguateBareword(LexAccessor &styler, Sci_PositionU bk, Sci_PositionU fw
 	        // ->bareword: part of variable spec
 	        || styler.Match(bk - 1, "::")
 	        // ::bareword: part of module spec
-	        || styler.Match(bk - 2, "sub")) {
-	        // sub bareword: subroutine declaration
+	        || styler.Match(bk - 2, "sub")
+	        || styler.Match(bk - 5, "method")) {
+	        // 'sub' or 'method' bareword: subroutine declaration
 	        // (implied BACK_KEYWORD, no keywords end in 'sub'!)
 		result |= 1;
 	}
@@ -299,9 +300,10 @@ bool styleCheckSubPrototype(LexAccessor &styler, Sci_PositionU bk) {
 				state = SUB_HAS_MODULE;
 			} else
 				break;
-		} else if (style1 == SCE_PL_WORD && len1 == 3 &&
-		           styler.Match(pos1, "sub")) {	// 'sub'
-			if (style2 == SCE_PL_IDENTIFIER) {	// 'sub' <identifier>
+		} else if ((style1 == SCE_PL_WORD || style1 == SCE_PL_IDENTIFIER) &&
+		           ((len1 == 3 && styler.Match(pos1, "sub")) || 	// 'sub'
+		            (len1 == 6 && styler.Match(pos1, "method")))) {	// or 'method
+			if (style2 == SCE_PL_IDENTIFIER) {	// ('sub' | 'method') <identifier>
 				state = SUB_HAS_SUB;
 			} else
 				break;
@@ -1742,7 +1744,7 @@ void SCI_METHOD LexerPerl::Fold(Sci_PositionU startPos, Sci_Position length, int
 
 	int levelPrev = SC_FOLDLEVELBASE;
 	if (lineCurrent > 0)
-		levelPrev = styler.LevelAt(lineCurrent - 1) >> 16;
+		levelPrev = FoldLevelStart(styler.LevelAt(lineCurrent - 1));
 	int levelCurrent = levelPrev;
 	char chNext = styler[startPos];
 	char chPrev = styler.SafeGetCharAt(startPos - 1);
@@ -1875,14 +1877,9 @@ void SCI_METHOD LexerPerl::Fold(Sci_PositionU startPos, Sci_Position length, int
 				levelCurrent = SC_FOLDLEVELBASE + 1;
 				isPackageLine = false;
 			}
-			lev |= levelCurrent << 16;
-			if (visibleChars == 0 && options.foldCompact)
-				lev |= SC_FOLDLEVELWHITEFLAG;
-			if ((levelCurrent > levelPrev) && (visibleChars > 0))
-				lev |= SC_FOLDLEVELHEADERFLAG;
-			if (lev != styler.LevelAt(lineCurrent)) {
-				styler.SetLevel(lineCurrent, lev);
-			}
+			lev |= levelCurrent << FoldLevelShift;
+			lev |= FoldLevelFlags(levelPrev, levelCurrent, visibleChars == 0 && options.foldCompact, visibleChars > 0);
+			styler.SetLevelIfDifferent(lineCurrent, lev);
 			lineCurrent++;
 			levelPrev = levelCurrent;
 			visibleChars = 0;
@@ -1892,7 +1889,7 @@ void SCI_METHOD LexerPerl::Fold(Sci_PositionU startPos, Sci_Position length, int
 		chPrev = ch;
 	}
 	// Fill in the real level of the next line, keeping the current flags as they will be filled in later
-	int flagsNext = styler.LevelAt(lineCurrent) & ~SC_FOLDLEVELNUMBERMASK;
+	const int flagsNext = styler.LevelAt(lineCurrent) & ~SC_FOLDLEVELNUMBERMASK;
 	styler.SetLevel(lineCurrent, levelPrev | flagsNext);
 }
 

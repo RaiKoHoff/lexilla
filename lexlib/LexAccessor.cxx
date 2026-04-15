@@ -11,6 +11,7 @@
 #include <algorithm>
 
 #include "ILexer.h"
+#include "Scintilla.h"
 
 #include "LexAccessor.h"
 #include "CharacterSet.h"
@@ -56,7 +57,7 @@ void LexAccessor::GetRangeLowered(Sci_PositionU startPos_, Sci_PositionU endPos_
 }
 
 std::string LexAccessor::GetRange(Sci_PositionU startPos_, Sci_PositionU endPos_) const {
-	assert(startPos_ < endPos_);
+	assert(startPos_ <= endPos_);
 	endPos_ = std::min(endPos_, static_cast<Sci_PositionU>(lenDoc));
 	const Sci_PositionU len = endPos_ - startPos_;
 	std::string s(len, '\0');
@@ -65,12 +66,29 @@ std::string LexAccessor::GetRange(Sci_PositionU startPos_, Sci_PositionU endPos_
 }
 
 std::string LexAccessor::GetRangeLowered(Sci_PositionU startPos_, Sci_PositionU endPos_) const {
-	assert(startPos_ < endPos_);
+	assert(startPos_ <= endPos_);
 	endPos_ = std::min(endPos_, static_cast<Sci_PositionU>(lenDoc));
 	const Sci_PositionU len = endPos_ - startPos_;
 	std::string s(len, '\0');
 	GetRangeLowered(startPos_, endPos_, s.data(), len + 1);
 	return s;
+}
+
+void LexAccessor::SetLevelIfDifferent(Sci_Position line, int level) {
+	if (level != pAccess->GetLevel(line)) {
+		pAccess->SetLevel(line, level);
+	}
+}
+
+int FoldLevelFlags(int levelLine, int levelNext, bool white, bool headerPermitted) noexcept {
+	int flags = 0;
+	if (white) {
+		flags |= SC_FOLDLEVELWHITEFLAG;
+	}
+	if ((levelLine < levelNext) && (headerPermitted)) {
+		flags |= SC_FOLDLEVELHEADERFLAG;
+	}
+	return flags;
 }
 
 }
